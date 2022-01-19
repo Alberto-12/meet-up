@@ -15,6 +15,17 @@ describe("<App /> integration", () => {
     expect(AppWrapper.find(EventList).props().events).toEqual(AppEventsState);
     AppWrapper.unmount();
   });
+  test("App should display only 12 events when first rendered", async () => {
+    // I am selecting 12 as my default number
+    const AppWrapper = mount(<App />);
+    expect(AppWrapper.state("numberOfEvents")).toBe(12);
+    expect(AppWrapper.state("events")).toEqual([]);
+    const testSlicedEvents = mockData.slice(0, 12);
+    await Promise.resolve(); // Using promise.resolve to give component time to update before testing state after componentDidMount()
+    expect(AppWrapper.state("events")).toEqual(testSlicedEvents);
+    expect(AppWrapper.state("events")).toHaveLength(12);
+    AppWrapper.unmount();
+  });
 });
 
 describe("<App /> component", () => {
