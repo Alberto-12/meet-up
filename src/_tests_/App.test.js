@@ -114,4 +114,25 @@ describe("<App /> integration", () => {
     expect(AppWrapper.state("events")).toHaveLength(12);
     AppWrapper.unmount();
   });
+
+  test("App passes numberOfEvents state as a prop to the NumberOfEvents component", () => {
+    const AppWrapper = mount(<App/>);
+    const numberOfEventsState = AppWrapper.state("numberOfEvents");
+    expect(numberOfEventsState).not.toEqual(undefined);
+    expect(AppWrapper.find(NumberOfEvents).props().numberOfEvents).toEqual(numberOfEventsState);
+    AppWrapper.unmount();
+});
+
+test("numberOfEvents input should change events state", async () => {
+  const AppWrapper = mount(<App/>);
+  const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+  const number = { target: { value: 10 } };
+  await NumberOfEventsWrapper.find(".numberEvents").simulate("change", number);
+  expect(NumberOfEventsWrapper.state().numOfEvents).toBe( 10 );
+  AppWrapper.update();
+  expect(AppWrapper.state("numberOfEvents")).toBe( 10 );
+  AppWrapper.unmount();
+  
+});
+
 });
